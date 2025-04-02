@@ -12,7 +12,20 @@ class BigMacStats:
         # Вычисляем средние цены
         self.avg_prices = self.df.groupby('name')['dollar_price'].mean().reset_index()
         
-
+        # Сопоставление названий стран
+        country_mapping = {
+            'United States': 'United States of America',
+            'Czech Republic': 'Czechia',
+            'South Korea': 'Republic of Korea',
+            'Russia': 'Russian Federation',
+            'Taiwan': 'Taiwan',
+            'Venezuela': 'Venezuela (Bolivarian Republic of)',
+            'Tanzania': 'United Republic of Tanzania',
+            'Syria': 'Syrian Arab Republic',
+            'Iran': 'Iran (Islamic Republic of)',
+            'Moldova': 'Republic of Moldova'
+        }
+        
         self.avg_prices['name'] = self.avg_prices['name'].replace(country_mapping)
         
         # Объединяем данные
