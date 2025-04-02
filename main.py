@@ -4,11 +4,11 @@ def main():
     try:
         analyzer = BigMacStats('BigmacPrice.csv')
         
-        # Основное задание
+        # Основные функции
         analyzer.show_table()
         analyzer.show_histogram()
         
-        # Дополнительное задание
+        # Дополнительная функция
         analyzer.show_heatmap()
         
     except FileNotFoundError:

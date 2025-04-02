@@ -1,44 +1,80 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
+import geopandas as gpd
 
 class BigMacStats:
     def __init__(self, file_path):
         self.df = pd.read_csv(file_path)
+        self.world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
         self.preprocess_data()
-        
+    
     def preprocess_data(self):
-        # Преобразование даты в год
-        self.df['year'] = pd.to_datetime(self.df['date']).dt.year
+        # Вычисляем средние цены
+        self.avg_prices = self.df.groupby('name')['dollar_price'].mean().reset_index()
         
-        # Создание сводной таблицы для тепловой карты
-        self.heatmap_data = self.df.pivot_table(
-            index='name',
-            columns='year',
-            values='dollar_price',
-            aggfunc='mean'
+        # Приводим названия стран к единому формату
+        country_mapping = {
+            'United States': 'United States of America',
+            'Czech Republic': 'Czechia',
+            'South Korea': 'South Korea',
+            # Добавьте другие несовпадающие названия при необходимости
+        }
+        
+        self.avg_prices['name'] = self.avg_prices['name'].replace(country_mapping)
+        
+        # Объединяем с геоданными
+        self.world = self.world.merge(
+            self.avg_prices,
+            left_on='name',
+            right_on='name',
+            how='left'
+        )
+    
+    def show_world_map(self):
+        fig, ax = plt.subplots(figsize=(20, 10))
+        self.world.plot(
+            column='dollar_price',
+            ax=ax,
+            legend=True,
+            legend_kwds={'label': "Средняя цена в долларах"},
+            missing_kwds={'color': 'lightgrey'},
+            cmap='OrRd'
         )
         
-    def show_heatmap(self):
-        plt.figure(figsize=(18, 12))
+        plt.title('Средняя стоимость Биг Мака в мире')
+        plt.axis('off')
+        plt.show()
+    
+    def show_histogram(self):
+        plt.figure(figsize=(15, 8))
+        data = self.avg_prices.sort_values('dollar_price', ascending=False)
         
-        # Настройка цветовой палитры
-        cmap = sns.diverging_palette(220, 20, as_cmap=True)
+        bars = plt.bar(data['name'], data['dollar_price'])
+        plt.xticks(rotation=90)
+        plt.ylabel('Средняя цена в долларах')
+        plt.title('Средняя стоимость Биг Мака по странам за все годы')
         
-        # Создание тепловой карты
-        sns.heatmap(
-            self.heatmap_data,
-            annot=True,
-            fmt=".1f",
-            cmap=cmap,
-            linewidths=.5,
-            cbar_kws={'label': 'Средняя цена в долларах'}
-        )
+        for bar in bars:
+            height = bar.get_height()
+            plt.text(bar.get_x() + bar.get_width()/2, height, 
+                     f'{height:.2f}', ha='center', va='bottom')
         
-        # Настройка отображения
-        plt.title('Динамика цен на Биг Мак по странам и годам', pad=20)
-        plt.xlabel('Год')
-        plt.ylabel('Страна')
-        plt.xticks(rotation=45)
         plt.tight_layout()
         plt.show()
+
+# Файл main.py
+from bigmac_stats import BigMacStats
+
+def main():
+    try:
+        analyzer = BigMacStats('BigmacPrice.csv')
+        analyzer.show_world_map()
+        analyzer.show_histogram()
+    
+    except Exception as e:
+        print(f"Ошибка: {str(e)}")
+        print("Убедитесь, что установлены все зависимости:")
+        print("pip install geopandas matplotlib pandas")
+
+if __name__ == "__main__":
+    main()
