@@ -1,3 +1,4 @@
+# Файл main.py
 from bigmac_stats import BigMacStats
 
 def main():

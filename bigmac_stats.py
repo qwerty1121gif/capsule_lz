@@ -4,8 +4,8 @@ import geopandas as gpd
 
 class BigMacStats:
     def __init__(self, file_path, shapefile_path):
-        self.df = pd.read_csv('D:\vs codik\capsule_lz')
-        self.world = gpd.read_file('D:\vs codik\capsule_lz\capsule_lz')
+        self.df = pd.read_csv(file_path)
+        self.world = gpd.read_file(shapefile_path)
         self.preprocess_data()
     
     def preprocess_data(self):
@@ -71,4 +71,3 @@ class BigMacStats:
         
         plt.tight_layout()
         plt.show()
-
