@@ -17,7 +17,7 @@ class BigMacStats:
             'United States': 'United States of America',
             'Czech Republic': 'Czechia',
             'South Korea': 'Republic of Korea',
-            'Russia': 'Russian Federation',
+            'Russia': 'Rus',
             'Taiwan': 'Taiwan',
             'Venezuela': 'Venezuela (Bolivarian Republic of)',
             'Tanzania': 'United Republic of Tanzania',
