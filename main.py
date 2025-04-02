@@ -17,6 +17,7 @@ def main():
         print("Инструкция по установке:")
         print("1. Скачайте данные с https://www.naturalearthdata.com/downloads/110m-cultural-vectors/")
         print("2. Распакуйте архив в папку с проектом")
+        print("2. Переименуйте пупку в ne_110m_admin_0_countries")
 
 if __name__ == "__main__":
     main()
