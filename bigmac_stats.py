@@ -4,28 +4,15 @@ import geopandas as gpd
 
 class BigMacStats:
     def __init__(self, file_path, shapefile_path):
-        self.df = pd.read_csv(file_path)
-        self.world = gpd.read_file(shapefile_path)
+        self.df = pd.read_csv('D:\vs codik\capsule_lz')
+        self.world = gpd.read_file('D:\vs codik\capsule_lz\capsule_lz')
         self.preprocess_data()
     
     def preprocess_data(self):
         # Вычисляем средние цены
         self.avg_prices = self.df.groupby('name')['dollar_price'].mean().reset_index()
         
-        # Сопоставление названий стран
-        country_mapping = {
-            'United States': 'United States of America',
-            'Czech Republic': 'Czechia',
-            'South Korea': 'Republic of Korea',
-            'Russia': 'Russian Federation',
-            'Taiwan': 'Taiwan',
-            'Venezuela': 'Venezuela (Bolivarian Republic of)',
-            'Tanzania': 'United Republic of Tanzania',
-            'Syria': 'Syrian Arab Republic',
-            'Iran': 'Iran (Islamic Republic of)',
-            'Moldova': 'Republic of Moldova'
-        }
-        
+
         self.avg_prices['name'] = self.avg_prices['name'].replace(country_mapping)
         
         # Объединяем данные
